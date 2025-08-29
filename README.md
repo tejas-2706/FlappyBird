@@ -1,0 +1,1 @@
+![A screenshot of my application](./assets/game_image.png)
