@@ -1,0 +1,94 @@
+<html>
+
+<head>
+    <title>Flappy Bird</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="canvas" width="500px" height="600px"
+        style="border: 2px solid black; background-image: url('./assets/background.jpg');"></canvas>
+</body>
+<script>
+    async function main() {
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const birdImg = new Image();
+        birdImg.src = './assets/bird.png'
+        await birdImg.decode();
+
+
+        let y = 0;
+        let yVel = 0;
+        let yAcc = 9.8;
+
+        let BIRD_SIZE = 50;
+        let TOWER_HEIGHT = 200;
+        let TOWER_WIDTH = 80;
+        let towerX = 700;
+
+        let towers = [
+            { x : 300 },
+            { x: 800 },
+            { x: 1050 },
+            { x: 1300 }
+        ];
+        document.onkeydown = function () {
+            yVel = -50
+        }
+        for (let i = 0; i < 1000; i++) {
+            ctx.clearRect(0, 0, 500, 600);
+            yVel = yVel + 0.33 * yAcc;
+            y = y + yVel * 0.33;
+
+            ctx.beginPath();
+            // ctx.fillRect(10, y, BIRD_SIZE, BIRD_SIZE);
+            ctx.drawImage(birdImg, 10, y, BIRD_SIZE, BIRD_SIZE);
+            ctx.fillStyle;
+
+            for (const tower of towers) {
+
+                ctx.beginPath();
+                ctx.fillRect(tower.x, 0, TOWER_WIDTH, TOWER_HEIGHT);
+                ctx.fillStyle = "green";
+
+                ctx.beginPath();
+                ctx.fillRect(tower.x, 600 - TOWER_HEIGHT, 80, TOWER_HEIGHT);
+                ctx.fillStyle;
+            }
+
+            // // next line
+            // ctx.beginPath();
+            // ctx.fillRect(towerX-200, 0, TOWER_WIDTH , TOWER_HEIGHT-10);
+            // ctx.fillStyle;
+
+            // ctx.beginPath();
+            // ctx.fillRect(towerX-200, 600 - TOWER_HEIGHT + 40, 80, TOWER_HEIGHT);
+            // ctx.fillStyle;
+
+            towerX = towerX - 1;
+            for (const tower of towers) {
+                tower.x = tower.x - 2;
+            }
+
+            // --- COLLISION CHECK ---
+            // Loop through every tower on screen
+            for (const tower of towers) {
+                // Check collision against the CURRENT tower (tower.x)
+                if (
+                    tower.x < 10 + BIRD_SIZE && tower.x + TOWER_WIDTH > 10 &&
+                    (y < TOWER_HEIGHT || y + BIRD_SIZE > 600 - TOWER_HEIGHT)
+                ) {
+                    // A collision happened, so game over!
+                    alert("Game, Over !!");
+                    return;
+                }
+            }
+
+            await new Promise((r) => setTimeout(r, 0.0333 * 1000));
+        }
+    }
+    main();
+</script>
+
+</html>
